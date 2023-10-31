@@ -201,6 +201,8 @@ SELECT * FROM BillInfo
 SELECT * FROM Food
 SELECT * FROM FoodCategory
 
+SELECT * FROM TableFood
+
 SELECT id FROM Bill WHERE idTable = 3 AND status = 0
 SELECT * FROM Bill WHERE idTable = 1 AND status = 0
 

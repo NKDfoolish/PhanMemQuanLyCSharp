@@ -52,6 +52,8 @@ namespace QuanLyQuanCafe
             lsvBill.Items.Clear();
             List<DTO.Menu> listBillInfo = MenuDAO.Instance.GetListMenuByTable(id);
 
+            float totalPrice = 0;
+
             foreach (DTO.Menu item in listBillInfo)
             {
                 ListViewItem lsvItem = new ListViewItem(item.FoodName.ToString());
@@ -59,8 +61,12 @@ namespace QuanLyQuanCafe
                 lsvItem.SubItems.Add(item.Price.ToString());
                 lsvItem.SubItems.Add(item.TotalPrice.ToString());
 
+                totalPrice+= item.TotalPrice;
+
                 lsvBill.Items.Add(lsvItem);
             }
+
+            txbTotalPrice.Text = totalPrice.ToString() + " vnđ";
         }
         #endregion
 
