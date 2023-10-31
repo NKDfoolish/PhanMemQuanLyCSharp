@@ -208,3 +208,59 @@ SELECT * FROM Bill WHERE idTable = 1 AND status = 0
 
 SELECT f.name, bi.count, f.price, f.price*bi.count AS totalPrice FROM dbo.BillInfo AS bi, dbo.Bill AS b, dbo.Food AS f
 WHERE bi.idBill = b.id AND bi.idFood = f.id AND b.idTable = 3
+
+SELECT f.name, bi.count, f.price, f.price*bi.count AS totalPrice FROM dbo.BillInfo AS bi, dbo.Bill AS b, dbo.Food AS f WHERE bi.idBill = b.id AND bi.idFood = f.id AND b.status = 0 AND b.idTable = 4
+
+SELECT * FROM Food
+
+go
+
+
+create proc USP_InsertBill
+@idTable int
+as
+begin
+	insert into dbo.Bill (dateCheckIn, dateCheckOut, idTable, status) values (GETDATE(), null, @idTable, 0)
+end
+go
+
+
+create proc USP_InsertBillInfo
+@idBill int, @idFood int, @count int
+as
+begin
+	insert into dbo.BillInfo(idBill, idFood, count) values (@idBill, @idFood, @count)
+end
+go
+
+
+select MAX(id) from Bill
+go
+
+alter proc USP_InsertBillInfo
+@idBill int, @idFood int, @count int
+as
+begin
+	declare @isExistBillInfo int
+	declare @foodCount int = 1
+
+	select @isExistBillInfo = COUNT(*), @foodCount = b.count from dbo.BillInfo as b where idBill = @idBill and idFood = @idFood
+
+	if (@isExistBillInfo > 0)
+	begin
+		declare @newCount int = @foodCount + @count
+		if (@newCount > 0)
+			update dbo.BillInfo set count = @foodCount + @count
+		else
+			delete dbo.BillInfo where idBill = @idBill and idFood = @idFood
+	end
+	else
+	begin
+		insert into dbo.BillInfo (idBill, idFood, count) values (@idBill, @idFood, @count)
+	end
+
+	
+end
+go
+
+
