@@ -216,11 +216,11 @@ SELECT * FROM Food
 go
 
 
-create proc USP_InsertBill
+alter proc USP_InsertBill
 @idTable int
 as
 begin
-	insert into dbo.Bill (dateCheckIn, dateCheckOut, idTable, status) values (GETDATE(), null, @idTable, 0)
+	insert into dbo.Bill (dateCheckIn, dateCheckOut, idTable, status, discount) values (GETDATE(), null, @idTable, 0, 0)
 end
 go
 
@@ -244,13 +244,13 @@ begin
 	declare @isExistBillInfo int
 	declare @foodCount int = 1
 
-	select @isExistBillInfo = COUNT(*), @foodCount = b.count from dbo.BillInfo as b where idBill = @idBill and idFood = @idFood
+	select @isExistBillInfo = id, @foodCount = b.count from dbo.BillInfo as b where idBill = @idBill and idFood = @idFood
 
 	if (@isExistBillInfo > 0)
 	begin
 		declare @newCount int = @foodCount + @count
 		if (@newCount > 0)
-			update dbo.BillInfo set count = @foodCount + @count
+			update dbo.BillInfo set count = @foodCount + @count where idFood = @idFood
 		else
 			delete dbo.BillInfo where idBill = @idBill and idFood = @idFood
 	end
@@ -263,4 +263,97 @@ begin
 end
 go
 
+-- trigger
+alter trigger UTG_UpdateBillInfo
+on dbo.BillInfo for insert, update
+as
+begin 
+	declare @idBill int
+	select @idBill = idBill from inserted
+	declare @idTable int
+	select @idTable = idTable from dbo.Bill where id = @idBill and status = 0
 
+	declare @count int
+	select @count = COUNT(*) from BillInfo where idBill = @idBill
+
+	if (@count > 0)
+	begin
+		update dbo.TableFood set status = N'Có người' where id = @idTable
+	end
+	else
+		update dbo.TableFood set status = N'Trống' where id = @idTable
+end
+go
+
+create trigger UTG_UpdateBill
+on dbo.Bill for update
+as
+begin 
+	declare @idBill int
+	select @idBill = id from inserted
+	declare @idTable int
+	select @idTable = idTable from dbo.Bill where id = @idBill
+	declare @count int = 0
+	select @count = COUNT(*) from dbo.Bill where idTable = @idTable and status = 0
+
+	if (@count = 0)
+		update dbo.TableFood set status = N'Trống' where id = @idTable
+end
+go
+
+delete BillInfo
+delete Bill
+go
+
+alter table dbo.bill 
+add discount int
+
+update dbo.Bill set discount = 0
+
+select * from Bill
+--
+
+go
+
+alter proc USP_SwitchTable
+@idTable1 int , @idTable2 int
+as
+begin
+	declare @idFirstBill int
+	declare @idSecondBill int
+
+	declare @isFirstTableEmpty int = 1
+	declare @isSecondTableEmpty int = 1
+
+	SELECT @idFirstBill = id FROM Bill WHERE idTable = @idTable1 AND status = 0
+	SELECT @idSecondBill = id FROM Bill WHERE idTable = @idTable2 AND status = 0
+
+	if (@idFirstBill is null)
+	begin
+		insert Bill (dateCheckIn, dateCheckOut, idTable, status) values (GETDATE(), null, @idTable1, 0)
+		select @idFirstBill = max(id) from Bill where idTable = @idTable1 and status = 0
+	end
+	select @isFirstTableEmpty = COUNT(*) from BillInfo where idBill = @idFirstBill
+
+	if (@idSecondBill is null)
+	begin
+		insert Bill (dateCheckIn, dateCheckOut, idTable, status) values (GETDATE(), null, @idTable2, 0)
+		select @idSecondBill = max(id) from Bill where idTable = @idTable2 and status = 0
+	end
+	select @isSecondTableEmpty = COUNT(*) from BillInfo where idBill = @idSecondBill
+
+
+	select id into IDBillInfoTable from BillInfo where idBill = @idSecondBill
+
+	update BillInfo set idBill = @idSecondBill where idBill = @idFirstBill
+
+	update BillInfo set idBill = @idFirstBill where id in (select * from IDBillInfoTable)
+
+	drop table IDBillInfoTable
+
+	if (@isFirstTableEmpty = 0)
+		update TableFood set status = N'Trống' where id = @idTable2
+	if (@isSecondTableEmpty = 0)
+		update TableFood set status = N'Trống' where id = @idTable1
+end
+go
