@@ -17,6 +17,7 @@ namespace QuanLyQuanCafe
     public partial class fAdmin : Form
     {
         BindingSource foodList = new BindingSource();
+        BindingSource accountList = new BindingSource();
         public fAdmin()
         {
             InitializeComponent();
@@ -24,16 +25,38 @@ namespace QuanLyQuanCafe
         }
 
         #region methods
+
+        List<Food> SearchFoodByName(string name)
+        {
+            List<Food> listFood = FoodDAO.Instance.SearchFoodByName(name);
+            return listFood;
+        }
         void Load()
         {
             dtgvFood.DataSource = foodList;
+            dtgvAccount.DataSource = accountList;
 
             LoadDateTimePickerBill();
             LoadListBillByDate(dtpkFromDate.Value, dtpkToDate.Value);
             LoadListFood();
+            LoadAccount();
             LoadCategoryIntoCombobox(cbFoodCategory);
             AddFoodBinding();
+            AddAcountBinding();
         }
+
+        void AddAcountBinding()
+        {
+            txbUserName.DataBindings.Add(new Binding("Text", dtgvAccount.DataSource, "UserName", true, DataSourceUpdateMode.Never));
+            txbDisplayName.DataBindings.Add(new Binding("Text", dtgvAccount.DataSource, "DisplayName", true, DataSourceUpdateMode.Never));
+            txbAccountType.DataBindings.Add(new Binding("Text", dtgvAccount.DataSource, "Type", true, DataSourceUpdateMode.Never));
+        }
+
+        void LoadAccount()
+        {
+            accountList.DataSource = AccountDAO.Instance.GetListAccount();
+        }
+
         void LoadDateTimePickerBill()
         {
             DateTime today = DateTime.Now;
@@ -78,28 +101,32 @@ namespace QuanLyQuanCafe
 
         private void txbFoodID_TextChanged(object sender, EventArgs e)
         {
-            if (dtgvFood.SelectedCells.Count > 0)
+            try
             {
-                int id = Convert.ToInt32(dtgvFood.SelectedCells[0].OwningRow.Cells["CategoryID"].Value);
-                Category category = CategoryDAO.Instance.GetCategoryByID(id);
-
-                cbFoodCategory.SelectedItem = category;
-
-                int index = -1;
-                int i = 0;
-
-                foreach(Category item in cbFoodCategory.Items)
+                if (dtgvFood.SelectedCells.Count > 0)
                 {
-                    if (item.ID == category.ID)
-                    {
-                        index = i;
-                        break;
-                    }
-                    i++;
-                }
+                    int id = Convert.ToInt32(dtgvFood.SelectedCells[0].OwningRow.Cells["CategoryID"].Value);
+                    Category category = CategoryDAO.Instance.GetCategoryByID(id);
 
-                cbFoodCategory.SelectedIndex = index;
+                    cbFoodCategory.SelectedItem = category;
+
+                    int index = -1;
+                    int i = 0;
+
+                    foreach (Category item in cbFoodCategory.Items)
+                    {
+                        if (item.ID == category.ID)
+                        {
+                            index = i;
+                            break;
+                        }
+                        i++;
+                    }
+
+                    cbFoodCategory.SelectedIndex = index;
+                }
             }
+            catch {}
         }
 
         private void btnAddFood_Click(object sender, EventArgs e)
@@ -188,6 +215,15 @@ namespace QuanLyQuanCafe
             remove { updateFood -= value; }
         }
 
+        private void btnSearchFood_Click(object sender, EventArgs e)
+        {
+            foodList.DataSource = SearchFoodByName(txbSearchFoodName.Text);
+        }
         #endregion
+
+        private void btnShowAccount_Click(object sender, EventArgs e)
+        {
+            LoadAccount();
+        }
     }
 }

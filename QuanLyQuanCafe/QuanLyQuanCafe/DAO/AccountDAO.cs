@@ -32,6 +32,11 @@ namespace QuanLyQuanCafe.DAO
             return result > 0;
         }
 
+        public DataTable GetListAccount()
+        {
+            return DataProvider.Instance.ExecuteQuery("Select UserName, DisplayName, Type from dbo.Account");
+        }
+
         public Account GetAccountByUserName(string userName)
         {
             DataTable data = DataProvider.Instance.ExecuteQuery("Select * from Account where userName = '" + userName + "'");
