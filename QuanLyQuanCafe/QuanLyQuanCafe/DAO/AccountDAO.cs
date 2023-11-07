@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,8 +22,21 @@ namespace QuanLyQuanCafe.DAO
 
         public bool Login(string userName, string passWord)
         {
+            byte[] temp = ASCIIEncoding.ASCII.GetBytes(passWord);
+            byte[] hashData = new MD5CryptoServiceProvider().ComputeHash(temp);
+
+            string hashPass = "";
+
+            foreach (byte item in hashData)
+            {
+                hashPass += item;
+            }
+
+            //var list = hashData.ToString();
+            //list.Reverse();
+
             string query = "EXEC USP_Login @userName , @passWord";
-            DataTable result = DataProvider.Instance.ExecuteQuery(query, new object[] {userName, passWord});
+            DataTable result = DataProvider.Instance.ExecuteQuery(query, new object[] {userName, hashPass});
             return result.Rows.Count > 0;
         }
 
@@ -46,6 +60,39 @@ namespace QuanLyQuanCafe.DAO
                 return new Account(row);
             }
             return null;
+        }
+
+        public bool InsertAccount(string name, string displayName, int type)
+        {
+            string query = string.Format("Insert dbo.Account (UserName, DisplayName, Type, password) values (N'{0}', N'{1}', {2}, N'{3}')", name, displayName, type, "1962026656160185351301320480154111117132155");
+            int result = DataProvider.Instance.ExecuteNonQuery(query);
+
+            return result > 0;
+        }
+
+        public bool UpdateAccount(string name, string displayName, int type)
+        {
+            string query = string.Format("UPDATE dbo.Account SET DisplayName = N'{1}' , Type = {2} where UserName = N'{0}'", name, displayName, type);
+            int result = DataProvider.Instance.ExecuteNonQuery(query);
+
+            return result > 0;
+        }
+
+        public bool DeleteAccount(string name)
+        {
+            string query = string.Format("Delete dbo.Account where UserName = N'{0}'", name);
+            int result = DataProvider.Instance.ExecuteNonQuery(query);
+
+            return result > 0;
+        }
+
+
+        public bool ResetPassword(string name)
+        {
+            string query = string.Format("update account set password = N'1962026656160185351301320480154111117132155' where username = N'{0}'", name);
+            int result = DataProvider.Instance.ExecuteNonQuery(query);
+
+            return result > 0;
         }
     }
 }

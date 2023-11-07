@@ -1,0 +1,15 @@
+C:\Users\duy\UIT\SE\Project\QuanLyQuanCafe\QuanLyQuanCafe\bin\Release\QuanLyQuanCafe.exe.config
+C:\Users\duy\UIT\SE\Project\QuanLyQuanCafe\QuanLyQuanCafe\bin\Release\QuanLyQuanCafe.exe
+C:\Users\duy\UIT\SE\Project\QuanLyQuanCafe\QuanLyQuanCafe\bin\Release\QuanLyQuanCafe.pdb
+C:\Users\duy\UIT\SE\Project\QuanLyQuanCafe\QuanLyQuanCafe\bin\Release\Microsoft.VisualStudio.DebuggerVisualizers.dll
+C:\Users\duy\UIT\SE\Project\QuanLyQuanCafe\QuanLyQuanCafe\obj\Release\QuanLyQuanCafe.csproj.AssemblyReference.cache
+C:\Users\duy\UIT\SE\Project\QuanLyQuanCafe\QuanLyQuanCafe\obj\Release\QuanLyQuanCafe.fAccountProfile.resources
+C:\Users\duy\UIT\SE\Project\QuanLyQuanCafe\QuanLyQuanCafe\obj\Release\QuanLyQuanCafe.fAdmin.resources
+C:\Users\duy\UIT\SE\Project\QuanLyQuanCafe\QuanLyQuanCafe\obj\Release\QuanLyQuanCafe.fLogin.resources
+C:\Users\duy\UIT\SE\Project\QuanLyQuanCafe\QuanLyQuanCafe\obj\Release\QuanLyQuanCafe.fTableManager.resources
+C:\Users\duy\UIT\SE\Project\QuanLyQuanCafe\QuanLyQuanCafe\obj\Release\QuanLyQuanCafe.Properties.Resources.resources
+C:\Users\duy\UIT\SE\Project\QuanLyQuanCafe\QuanLyQuanCafe\obj\Release\QuanLyQuanCafe.csproj.GenerateResource.cache
+C:\Users\duy\UIT\SE\Project\QuanLyQuanCafe\QuanLyQuanCafe\obj\Release\QuanLyQuanCafe.csproj.CoreCompileInputs.cache
+C:\Users\duy\UIT\SE\Project\QuanLyQuanCafe\QuanLyQuanCafe\obj\Release\QuanLyQuanCafe.csproj.CopyComplete
+C:\Users\duy\UIT\SE\Project\QuanLyQuanCafe\QuanLyQuanCafe\obj\Release\QuanLyQuanCafe.exe
+C:\Users\duy\UIT\SE\Project\QuanLyQuanCafe\QuanLyQuanCafe\obj\Release\QuanLyQuanCafe.pdb

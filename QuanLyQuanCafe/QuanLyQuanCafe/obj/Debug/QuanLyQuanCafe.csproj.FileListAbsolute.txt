@@ -11,3 +11,5 @@ C:\Users\duy\UIT\SE\Project\QuanLyQuanCafe\QuanLyQuanCafe\obj\Debug\QuanLyQuanCa
 C:\Users\duy\UIT\SE\Project\QuanLyQuanCafe\QuanLyQuanCafe\obj\Debug\QuanLyQuanCafe.fTableManager.resources
 C:\Users\duy\UIT\SE\Project\QuanLyQuanCafe\QuanLyQuanCafe\obj\Debug\QuanLyQuanCafe.fAccountProfile.resources
 C:\Users\duy\UIT\SE\Project\QuanLyQuanCafe\QuanLyQuanCafe\obj\Debug\QuanLyQuanCafe.fAdmin.resources
+C:\Users\duy\UIT\SE\Project\QuanLyQuanCafe\QuanLyQuanCafe\bin\Debug\Microsoft.VisualStudio.DebuggerVisualizers.dll
+C:\Users\duy\UIT\SE\Project\QuanLyQuanCafe\QuanLyQuanCafe\obj\Debug\QuanLyQuanCafe.csproj.CopyComplete
